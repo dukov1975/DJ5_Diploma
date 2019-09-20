@@ -1,0 +1,47 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-4">Добро пожаловать на сайт просто магазина</h1>
+      <p>Лучшие мобилы только у нас:</p>
+    </div>
+  </div>
+
+
+  <div class="container mb-5">
+    <!-- Example row of columns -->
+    <div class="row">
+
+      {% for item in smartphones %}
+
+          {% include "shop/item.html" with item=item %}
+
+      {% endfor %}
+
+    </div>
+  </div> <!-- /container -->
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-4">Не знаете что надеть летом?</h1>
+      <p>Вот что мы можем предложить:</p>
+    </div>
+  </div>
+
+
+  <div class="container mb-5">
+    <!-- Example row of columns -->
+    <div class="row">
+
+      {% for item in clothes %}
+
+        {% include "shop/item.html" with item=item %}
+
+      {% endfor %}
+
+    </div>
+  </div> <!-- /container -->
+
+{% endblock %}
