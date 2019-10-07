@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
+from django.core.cache import cache
 
 
 class Article(models.Model):
@@ -83,3 +86,18 @@ class ItemInOrder(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     count = models.IntegerField()
+
+
+def clear_authors_count_cache():
+    cache.delete('categories')
+
+
+@receiver(post_delete, sender=Article)
+def category_post_delete_handler(sender, **kwargs):
+    clear_authors_count_cache()
+
+
+@receiver(post_save, sender=Article)
+def category_post_save_handler(sender, **kwargs):
+    if kwargs['created']:
+        clear_authors_count_cache()

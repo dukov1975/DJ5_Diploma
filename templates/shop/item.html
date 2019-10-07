@@ -4,7 +4,8 @@
     <a href="{% url 'item' id=item.id %}">
         <img src="{{item.photo.url}}" width="180">
     </a>
-    <form action="{% url 'to_cart' item_id=item.id %}" method="get">
+    <form action="{% url 'to_cart' item_id=item.id %}" method="POST">
+        {% csrf_token %}
         <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
     </form>
 </div>
