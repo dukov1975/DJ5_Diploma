@@ -43,9 +43,9 @@
 
 
             {% if request.user.is_authenticated %}
-        <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'logout' %}?next={% url 'index' %}">Выйти</a>
+                <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'logout' %}?next={% url 'index' %}">Выйти</a>
             {% else %}
-        <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'login' %}">Войти</a>
+                <a class="btn btn-outline-success my-2 my-sm-0" role="button" href="{% url 'login' %}">Войти</a>
             {% endif %}
 
     </div>
