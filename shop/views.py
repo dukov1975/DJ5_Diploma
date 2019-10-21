@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Article, Item, Review, Cart, ItemInCart, ItemInOrder, Order
+from .models import Category, Item, Review, ItemInCart, ItemInOrder, Order
 from .forms import AddReview
-from django.core.cache import cache
-from .utils import *
+from .utils import get_sid, get_categories, get_cart
 from django.core.paginator import Paginator
 from django.http import HttpResponseNotAllowed
 
@@ -76,16 +75,15 @@ def to_cart(request, item_id):
         cart = get_cart(get_sid(request))
         item = Item.objects.get(id=item_id)
 
-        item_in_cart = ItemInCart.objects.filter(cart=cart, item=item)
+        item_in_cart = ItemInCart.objects.filter(cart=cart, item=item).first()
 
         if item_in_cart:
-            my_obj = item_in_cart.first()
-            my_obj.count += 1
-            my_obj.save()
+            item_in_cart.count += 1
+            item_in_cart.save()
         else:
             ItemInCart.objects.create(cart=cart, item=item, count=1)
     else:
-        raise HttpResponseNotAllowed(['GET'])
+        raise HttpResponseNotAllowed(['POST'])
     return redirect(cart_view)
 
 
@@ -101,17 +99,12 @@ def create_order(request):
                 ItemInOrder.objects.create(item=item, order=order, count=iib.count)
                 iib.delete()
     else:
-        raise HttpResponseNotAllowed(['GET'])
+        raise HttpResponseNotAllowed(['POST'])
     return redirect('index')
 
 
-def get_cart(sid):
-    cart, created = Cart.objects.get_or_create(sid=sid)
-    return cart
 
 
-def get_categories():
-    categories = cache.get_or_set('categories', Category.objects.filter(is_main=True).prefetch_related(), 3600)
-    return categories
+
 
 
